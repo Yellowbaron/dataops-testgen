@@ -35,6 +35,7 @@ dependencies = [
     "snowflake-sqlalchemy==1.6.1",
     "pyodbc==5.0.0",
     "psycopg2-binary==2.9.9",
+    "clickhouse-sqlalchemy==0.2.0",
     "pycryptodome==3.21",
     "prettytable==3.7.0",
     "requests_extensions==1.1.3",

@@ -3,7 +3,7 @@ from typing import Literal, TypedDict
 
 from testgen.common.encrypt import DecryptText
 
-SQLFlavor = Literal["redshift", "snowflake", "mssql", "postgresql", "databricks"]
+SQLFlavor = Literal["redshift", "snowflake", "mssql", "postgresql", "databricks", "clickhouse"]
 
 
 class ConnectionParams(TypedDict):

@@ -471,4 +471,11 @@ FLAVOR_OPTIONS = [
         icon=get_asset_data_url("flavors/databricks.svg"),
         connection_string=get_connection_string("databricks"),
     ),
+    ConnectionFlavor(
+        label="ClickHouse",
+        value="clickhouse",
+        flavor="clickhouse",
+        icon=get_asset_data_url("flavors/clickhouse.svg"),
+        connection_string=get_connection_string("clickhouse"),
+    ),
 ]
