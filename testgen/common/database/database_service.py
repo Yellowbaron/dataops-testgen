@@ -27,7 +27,28 @@ from testgen.common.credentials import (
     get_tg_username,
 )
 from testgen.common.database import FilteredStringIO
-from testgen.common.database.flavor.flavor_service import ConnectionParams, FlavorService, SQLFlavor
+from testgen.common.database.flavor.clickhouse_flavor_service import (
+    ClickhouseFlavorService,
+)
+from testgen.common.database.flavor.databricks_flavor_service import (
+    DatabricksFlavorService,
+)
+from testgen.common.database.flavor.flavor_service import (
+    ConnectionParams,
+    FlavorService,
+    SQLFlavor,
+)
+from testgen.common.database.flavor.mssql_flavor_service import MssqlFlavorService
+from testgen.common.database.flavor.postgresql_flavor_service import (
+    PostgresqlFlavorService,
+)
+from testgen.common.database.flavor.redshift_flavor_service import (
+    RedshiftFlavorService,
+)
+from testgen.common.database.flavor.snowflake_flavor_service import (
+    SnowflakeFlavorService,
+)
+from testgen.common.database.flavor.trino_flavor_service import TrinoFlavorService
 from testgen.common.read_file import get_template_files
 
 LOG = logging.getLogger("testgen")
@@ -76,11 +97,18 @@ def set_target_db_params(connection_params: ConnectionParams) -> None:
 
 
 def get_flavor_service(flavor: SQLFlavor) -> FlavorService:
-    module_path = f"testgen.common.database.flavor.{flavor}_flavor_service"
-    class_name = f"{flavor.capitalize()}FlavorService"
-    module = importlib.import_module(module_path)
-    flavor_class = getattr(module, class_name)
-    return flavor_class()
+    flavor_map = {
+        "clickhouse": ClickhouseFlavorService,
+        "databricks": DatabricksFlavorService,
+        "mssql": MssqlFlavorService,
+        "postgresql": PostgresqlFlavorService,
+        "redshift": RedshiftFlavorService,
+        "snowflake": SnowflakeFlavorService,
+        "trino": TrinoFlavorService,
+    }
+    if flavor in flavor_map:
+        return flavor_map[flavor]()
+    raise ValueError(f"Unsupported SQL flavor: {flavor}")
 
 
 class CreateDatabaseParams(TypedDict):

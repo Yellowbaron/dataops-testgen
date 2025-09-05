@@ -12,6 +12,7 @@ try:
     from pyodbc import Error as PyODBCError
 except ImportError:
     PyODBCError = None
+from requests.exceptions import ConnectionError as RequestsConnectionError
 from sqlalchemy.exc import DatabaseError, DBAPIError
 
 import testgen.ui.services.database_service as db
@@ -229,9 +230,13 @@ class ConnectionsPage(Page):
             if is_open_ssl_error(error):
                 details = error.args[0]
             return ConnectionStatus(message="Error attempting the connection.", details=details, successful=False)
+        except RequestsConnectionError as error:
+            LOG.exception("Error testing database connection")
+            details = "Could not connect to the database. Please check the host, port, and firewall settings."
+            return ConnectionStatus(message="Error attempting the connection.", details=details, successful=False)
         except Exception as error:
             details = "Try again"
-            if connection["connect_by_key"] and not connection.get("private_key", ""):
+            if connection.connect_by_key and not connection.private_key:
                 details = "The private key is missing."
             LOG.exception("Error testing database connection")
             return ConnectionStatus(message="Error attempting the connection.", details=details, successful=False)
